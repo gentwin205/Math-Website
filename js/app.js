@@ -8,14 +8,45 @@ let problemArray = [];
 //need a function for progressing to the next question.
 //need an event listener to allow user to select answers.
 
-function display(number){
-    const question = document.querySelector('#problem .expression');
-    question.textContent = number.leftOperand + " * " + number.rightOperand;
+function checkAnswer(index, correctAnswer) {
+  const selectedAnswer = problemArray[currentProblem - 1].answer[index];
 
-    const answer = document.querySelector('#answers li');
-    // need rest of code for displaying answers. I think a for each statment could work.
-        
+  if (selectedAnswer === correctAnswer) {
+    currentScore++; 
+  }
+
+  currentProblem++; 
+  if (currentProblem <= totalProblems) {
+    display(problemArray[currentProblem - 1]); 
+    screenProblem(); 
+    screenScore(); 
+  } else {
+    const question = document.querySelector('#problem .expression');
+    question.textContent = "Practice Completed!";
+    const answersList = document.querySelector('#answers ul');
+    answersList.innerHTML = '';
+  }
 }
+
+function display(number) {
+  const question = document.querySelector('#problem .expression');
+  question.textContent = number.leftOperand + " * " + number.rightOperand;
+
+  const answersList = document.querySelector('#answers ul');
+  answersList.innerHTML = '';
+
+  number.answer.forEach((answer, index) => {
+    const listItem = document.createElement('li');
+    listItem.textContent = answer;
+    listItem.addEventListener('click', () => checkAnswer(index, number.correctAnswer));
+    answersList.appendChild(listItem);
+    
+
+  });
+}
+
+
+
 
 /**
  * Utility function to generate a random number based on max
